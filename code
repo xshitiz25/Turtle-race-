@@ -1,0 +1,63 @@
+import turtle
+import time
+import random
+
+SCREEN_WIDTH, SCREEN_HEIGHT = 700, 600
+TURTLE_COLORS = ['red', 'green', 'blue', 'orange', 'yellow', 'black', 'purple', 'pink', 'brown', 'cyan']
+
+def prompt_racers():
+    while True:
+        try:
+            racers = int(input('Enter the number of racers (2 - 10): '))
+            if 2 <= racers <= 10:
+                return racers
+            else:
+                print('Please enter a number between 2 and 10.')
+        except ValueError:
+            print('Invalid input. Please enter a number.')
+
+def start_race(colors):
+    competitors = setup_turtles(colors)
+
+    while True:
+        for competitor in competitors:
+            competitor.forward(random.randint(1, 20))
+
+            if competitor.ycor() >= SCREEN_HEIGHT // 2 - 10:
+                winning_color = competitor.fillcolor()
+                return winning_color
+
+def setup_turtles(colors):
+    turtles = []
+    spacing = SCREEN_WIDTH // (len(colors) + 1)
+    
+    for idx, color in enumerate(colors):
+        new_turtle = turtle.Turtle()
+        new_turtle.color(color)
+        new_turtle.shape('turtle')
+        new_turtle.penup()
+        new_turtle.setheading(90)
+        new_turtle.goto(-SCREEN_WIDTH//2 + (idx + 1) * spacing, -SCREEN_HEIGHT//2 + 20)
+        new_turtle.pendown()
+        turtles.append(new_turtle)
+    
+    return turtles
+
+def initialize_screen():
+    screen = turtle.Screen()
+    screen.setup(SCREEN_WIDTH, SCREEN_HEIGHT)
+    screen.title('Exciting Turtle Race!')
+
+def main():
+    num_racers = prompt_racers()
+    random.shuffle(TURTLE_COLORS)
+    selected_colors = TURTLE_COLORS[:num_racers]
+    
+    initialize_screen()
+    winner = start_race(selected_colors)
+    
+    print("Congratulations! The winning turtle is:", winner)
+    time.sleep(5)
+
+if __name__ == "__main__":
+    main()
